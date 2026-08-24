@@ -20,11 +20,15 @@
     
     .page { 
       display: none; 
-      width: 100%; 
-      height: 100%; 
+      width: 90%; 
+      max-width: 420px; 
+      height: 85vh; 
+      border-radius: 20px; 
+      padding: 25px; 
       box-sizing: border-box; 
       color: white; 
       text-align: center; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
       background-size: cover; 
       background-position: center; 
       position: relative;
@@ -34,7 +38,7 @@
     #audio { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('audio-bg.png'); }
     #video { background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url('video-bg.png'); }
 
-    .page.active { display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px; }
+    .page.active { display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
 
     .header-group {
       width: 100%;
@@ -42,17 +46,17 @@
     }
 
     .main-title {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: normal;
       letter-spacing: 1px;
-      margin-top: 5px;
-      margin-bottom: 2px;
+      margin-top: 10px;
+      margin-bottom: 5px;
       color: rgba(255, 255, 255, 0.9);
       text-shadow: 2px 4px 10px rgba(0,0,0,0.9);
     }
     
     .sub-title {
-      font-size: 28px;
+      font-size: 34px;
       font-weight: bold;
       margin-top: 0;
       color: #ffffff;
@@ -72,7 +76,7 @@
       white-space: nowrap;
       padding-left: 100%;
       animation: marquee 10s linear infinite;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: bold;
       color: #D4AF37;
     }
@@ -87,20 +91,20 @@
       margin-bottom: 5px;
     }
     .word-container h2 {
-      font-size: 18px;
-      margin: 5px 0 6px 0;
+      font-size: 20px;
+      margin: 5px 0 8px 0;
       text-shadow: 2px 4px 8px rgba(0,0,0,0.9);
     }
 
     .verse-display-box { 
       width: 100%; 
-      height: 105px; 
+      height: 110px; 
       background: rgba(0, 0, 0, 0.6); 
       border: 2px solid #6E473B; 
       border-radius: 12px; 
       color: white; 
-      padding: 10px; 
-      font-size: 12px; 
+      padding: 12px; 
+      font-size: 13px; 
       line-height: 1.4;
       box-sizing: border-box; 
       text-align: center;
@@ -113,17 +117,17 @@
     }
 
     .verse-reference {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: bold;
-      margin-top: 3px;
+      margin-top: 4px;
       display: block;
       color: #D4AF37;
     }
 
     .meditation-message {
-      font-size: 10px;
+      font-size: 11px;
       color: #ccc;
-      margin: 6px 0 0 0;
+      margin: 8px 0 0 0;
       font-style: normal;
       line-height: 1.3;
       text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
@@ -139,8 +143,8 @@
       margin-bottom: 12px; 
     }
     .control-box p {
-      margin: 0 0 4px 0;
-      font-size: 11px;
+      margin: 0 0 6px 0;
+      font-size: 12px;
       color: #aaa;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -150,7 +154,7 @@
       background: rgba(0, 0, 0, 0.65);
       border: 2px solid #6E473B;
       border-radius: 12px;
-      padding: 15px;
+      padding: 20px;
       width: 100%;
       box-sizing: border-box;
       margin: auto 0;
@@ -159,18 +163,20 @@
     
     .play-icon-btn {
       display: inline-block;
-      font-size: 44px;
+      font-size: 48px;
       color: #6E473B;
       text-decoration: none;
-      margin-top: 5px;
+      margin-top: 10px;
       transition: transform 0.1s ease;
       cursor: pointer;
     }
+    .play-icon-btn:hover { color: #D4AF37; }
+    .play-icon-btn:active { transform: scale(0.9); }
 
     .btn-group { 
       width: 100%; 
       margin-top: auto;
-      margin-bottom: 10px; 
+      margin-bottom: 15px; 
       position: relative;
       z-index: 100;
     }
@@ -179,53 +185,62 @@
       background: #6E473B; 
       color: #ffffff; 
       border: none; 
-      padding: 10px 16px; 
-      margin: 4px; 
-      font-size: 13px; 
+      padding: 12px 20px; 
+      margin: 5px; 
+      font-size: 14px; 
       font-weight: bold; 
       border-radius: 8px; 
       cursor: pointer; 
-      box-shadow: 0 4px 0 #3D251F, 0 6px 12px rgba(0,0,0,0.6); 
+      box-shadow: 0 5px 0 #3D251F, 0 8px 15px rgba(0,0,0,0.6); 
       transition: all 0.1s ease;
     }
     .nav-btn:active { 
-      transform: translateY(3px); 
-      box-shadow: 0 1px 0 #3D251F, 0 2px 4px rgba(0,0,0,0.6); 
+      transform: translateY(4px); 
+      box-shadow: 0 1px 0 #3D251F, 0 3px 5px rgba(0,0,0,0.6); 
     }
 
     .mini-btn {
       background: #6E473B; 
       color: #ffffff; 
       border: none; 
-      padding: 6px 12px; 
-      margin: 3px; 
-      font-size: 11px; 
+      padding: 8px 14px; 
+      margin: 4px; 
+      font-size: 12px; 
       font-weight: bold; 
       border-radius: 6px; 
       cursor: pointer; 
-      box-shadow: 0 3px 0 #3D251F, 0 4px 8px rgba(0,0,0,0.6);
+      box-shadow: 0 3px 0 #3D251F, 0 5px 10px rgba(0,0,0,0.6);
+    }
+    .mini-btn:active { 
+      transform: translateY(2px); 
+      box-shadow: 0 1px 0 #3D251F, 0 2px 4px rgba(0,0,0,0.6); 
     }
 
     .audio-icon-btn { 
       background: #333; 
       color: white; 
       border: 1px solid #555; 
-      padding: 6px 12px; 
-      margin: 0 3px; 
-      font-size: 14px; 
+      padding: 8px 16px; 
+      margin: 0 4px; 
+      font-size: 16px; 
       font-weight: bold;
       border-radius: 6px; 
       cursor: pointer; 
+      box-shadow: 0 3px 0 #111; 
+    }
+    .audio-icon-btn:active { 
+      transform: translateY(2px); 
+      box-shadow: 0 1px 0 #111; 
     }
 
     .footer-copyright {
-      font-size: 10px;
+      font-size: 11px;
       opacity: 0.6;
-      margin-top: 4px;
-      margin-bottom: 4px;
+      margin-top: 5px;
+      margin-bottom: 5px;
       text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
       width: 100%;
-      line-height: 1.2;
+      line-height: 1.3;
     }
   </style>
 </head>
@@ -284,7 +299,7 @@
   <div id="video" class="page">
     <div></div>
     <div class="podcast-link-box">
-      <p style="margin:0; font-size: 16px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
+      <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
       <a href="https://spotify.com" target="_blank" class="play-icon-btn" title="Listen on Spotify">📹</a>
     </div>
     <div class="btn-group">
