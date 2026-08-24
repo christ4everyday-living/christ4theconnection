@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Christ 4 Every Day Living</title>
-  <link rel="manifest" href="My3DApp/manifest.json">
+  <link rel="manifest" href="manifest.json">
   <style>
     body { 
       margin: 0; 
@@ -30,10 +30,10 @@
       position: relative;
     }
 
-    /* Fixed Layout Image Paths: Pointing directly inside your My3DApp folder assets */
-    #home { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('My3DApp/home-bg.png'); }
-    #audio { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('My3DApp/audio-bg.png'); }
-    #video { background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url('My3DApp/video-bg.png'); }
+    /* Fixed Image Paths to look directly in the main directory instead of a folder */
+    #home { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('home-bg.png'); }
+    #audio { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('audio-bg.png'); }
+    #video { background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url('video-bg.png'); }
 
     .page.active { display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 20px; }
 
@@ -265,7 +265,7 @@
     <div style="width: 100%;">
       <div class="control-box">
         <p>Audio Track Controls</p>
-        <audio id="myAudio" src="My3DApp/audio-file.mp3"></audio>
+        <audio id="myAudio" src="audio-file.mp3"></audio>
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
         <button class="audio-icon-btn" onclick="stopAudio()">■</button>
@@ -316,7 +316,7 @@
     }
     updateTickerDate();
 
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('My3DApp/sw.js').catch(err => console.log(err)); }
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); }
   </script>
 </body>
 </html>
