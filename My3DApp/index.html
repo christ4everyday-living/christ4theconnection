@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christ 4 Every Day Living</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      height: 100vh; 
+      background: #111; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      overflow: hidden; 
+      font-family: sans-serif; 
+    }
+    
+    .page { 
+      display: none; 
+      width: 90%; 
+      max-width: 420px; 
+      height: 85vh; 
+      border-radius: 20px; 
+      padding: 25px; 
+      box-sizing: border-box; 
+      color: white; 
+      text-align: center; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+      background-size: cover; 
+      background-position: center; 
+      position: relative;
+    }
+
+    #home { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('home-bg.png'); }
+    #audio { background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('audio-bg.png'); }
+    #video { background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url('video-bg.png'); }
+
+    .page.active { display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+
+    .header-group {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .main-title {
+      font-size: 16px;
+      font-weight: normal;
+      letter-spacing: 1px;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 2px 4px 10px rgba(0,0,0,0.9);
+    }
+    
+    .sub-title {
+      font-size: 34px;
+      font-weight: bold;
+      margin-top: 0;
+      color: #ffffff;
+      text-shadow: 2px 4px 10px rgba(0,0,0,0.9);
+    }
+
+    .ticker-wrap {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 0;
+      overflow: hidden;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    .ticker {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: marquee 10s linear infinite;
+      font-size: 14px;
+      font-weight: bold;
+      color: #D4AF37;
+    }
+    @keyframes marquee {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+
+    .word-container {
+      width: 100%;
+      margin-top: auto; 
+      margin-bottom: 5px;
+    }
+    .word-container h2 {
+      font-size: 20px;
+      margin: 5px 0 8px 0;
+      text-shadow: 2px 4px 8px rgba(0,0,0,0.9);
+    }
+
+    .verse-display-box { 
+      width: 100%; 
+      height: 110px; 
+      background: rgba(0, 0, 0, 0.6); 
+      border: 2px solid #6E473B; 
+      border-radius: 12px; 
+      color: white; 
+      padding: 12px; 
+      font-size: 13px; 
+      line-height: 1.4;
+      box-sizing: border-box; 
+      text-align: center;
+      overflow-y: auto;
+    }
+
+    .verse-text {
+      font-style: italic;
+      margin: 0;
+    }
+
+    .verse-reference {
+      font-size: 13px;
+      font-weight: bold;
+      margin-top: 4px;
+      display: block;
+      color: #D4AF37;
+    }
+
+    .meditation-message {
+      font-size: 11px;
+      color: #ccc;
+      margin: 8px 0 0 0;
+      font-style: normal;
+      line-height: 1.3;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .control-box { 
+      background: rgba(0,0,0,0.7); 
+      padding: 10px; 
+      border-radius: 12px; 
+      width: 100%; 
+      box-sizing: border-box;
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 12px; 
+    }
+    .control-box p {
+      margin: 0 0 6px 0;
+      font-size: 12px;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .podcast-link-box {
+      background: rgba(0, 0, 0, 0.65);
+      border: 2px solid #6E473B;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      margin: auto 0;
+      text-shadow: 2px 3px 6px rgba(0,0,0,0.8);
+    }
+    
+    .play-icon-btn {
+      display: inline-block;
+      font-size: 48px;
+      color: #6E473B;
+      text-decoration: none;
+      margin-top: 10px;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+    }
+    .play-icon-btn:hover { color: #D4AF37; }
+    .play-icon-btn:active { transform: scale(0.9); }
+
+    .btn-group { 
+      width: 100%; 
+      margin-top: auto;
+      margin-bottom: 15px; 
+      position: relative;
+      z-index: 100;
+    }
+    
+    .nav-btn { 
+      background: #6E473B; 
+      color: #ffffff; 
+      border: none; 
+      padding: 12px 20px; 
+      margin: 5px; 
+      font-size: 14px; 
+      font-weight: bold; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      box-shadow: 0 5px 0 #3D251F, 0 8px 15px rgba(0,0,0,0.6); 
+      transition: all 0.1s ease;
+    }
+    .nav-btn:active { 
+      transform: translateY(4px); 
+      box-shadow: 0 1px 0 #3D251F, 0 3px 5px rgba(0,0,0,0.6); 
+    }
+
+    .mini-btn {
+      background: #6E473B; 
+      color: #ffffff; 
+      border: none; 
+      padding: 8px 14px; 
+      margin: 4px; 
+      font-size: 12px; 
+      font-weight: bold; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      box-shadow: 0 3px 0 #3D251F, 0 5px 10px rgba(0,0,0,0.6);
+    }
+    .mini-btn:active { 
+      transform: translateY(2px); 
+      box-shadow: 0 1px 0 #3D251F, 0 2px 4px rgba(0,0,0,0.6); 
+    }
+
+    .audio-icon-btn { 
+      background: #333; 
+      color: white; 
+      border: 1px solid #555; 
+      padding: 8px 16px; 
+      margin: 0 4px; 
+      font-size: 16px; 
+      font-weight: bold;
+      border-radius: 6px; 
+      cursor: pointer; 
+      box-shadow: 0 3px 0 #111; 
+    }
+    .audio-icon-btn:active { 
+      transform: translateY(2px); 
+      box-shadow: 0 1px 0 #111; 
+    }
+
+    .footer-copyright {
+      font-size: 11px;
+      opacity: 0.6;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+      width: 100%;
+      line-height: 1.3;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page 1: Home Page -->
+  <div id="home" class="page active">
+    <div class="header-group">
+      <p class="main-title">Christ 4 Every Day Living</p>
+      <h1 class="sub-title">The Connection</h1>
+    </div>
+    <div class="btn-group">
+      <button class="nav-btn" onclick="showPage('audio')">Go to Audio</button>
+      <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2026 Christ 4 Every Day Living. All Rights Reserved.
+    </div>
+  </div>
+
+  <!-- Page 2: Audio Page -->
+  <div id="audio" class="page">
+    <div class="ticker-wrap">
+      <div class="ticker" id="dateTicker">Christ 4 Every Day Living: The Connection...</div>
+    </div>
+
+    <div class="word-container">
+      <h2>Daily Word</h2>
+      <div class="verse-display-box">
+        <p class="verse-text">"These are the things you must do: Speak truth to one another; make true and sound decisions within your gates."</p>
+        <span class="verse-reference">— Zechariah 8:16</span>
+      </div>
+      <p class="meditation-message">(God, Your Word is meant to be a Daily Word for us to read it, study it, meditate on it, accept it and apply it to our every day lives)</p>
+    </div>
+
+    <div style="width: 100%;">
+      <div class="control-box">
+        <p>Audio Track Controls</p>
+        <audio id="myAudio" src="audio-file.mp3"></audio>
+        <button class="audio-icon-btn" onclick="playAudio()">▶</button>
+        <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
+        <button class="audio-icon-btn" onclick="stopAudio()">■</button>
+      </div>
+    </div>
+    
+    <div class="btn-group">
+      <button class="nav-btn" onclick="showPage('home')">Back Home</button>
+      <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
+    </div>
+    <div class="footer-copyright">
+      Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
+    </div>
+  </div>
+
+  <!-- Page 3: Video Page -->
+  <div id="video" class="page">
+    <div></div>
+    <div class="podcast-link-box">
+      <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
+      <a href="https://spotify.com" target="_blank" class="play-icon-btn" title="Listen on Spotify">📹</a>
+    </div>
+    <div class="btn-group">
+      <button class="mini-btn" onclick="showPage('home')">Back Home</button>
+      <button class="mini-btn" onclick="showPage('audio')">Go to Audio</button>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2026 Christ 4 Every Day Living. All Rights Reserved.
+    </div>
+  </div>
+
+  <script>
+    function showPage(pageId) { 
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+      document.getElementById(pageId).classList.add('active'); 
+    }
+    
+    var audio = document.getElementById("myAudio");
+    function playAudio() { audio.play(); }
+    function pauseAudio() { audio.pause(); }
+    function stopAudio() { audio.pause(); audio.currentTime = 0; }
+
+    function updateTickerDate() {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var today  = new Date();
+      var dateString = today.toLocaleDateString("en-US", options);
+      document.getElementById("dateTicker").innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
+    }
+    updateTickerDate();
+
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); }
+  </script>
+</body>
+</html>
