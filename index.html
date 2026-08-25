@@ -279,7 +279,22 @@
     <div style="width: 100%;">
       <div class="control-box">
         <p>Audio Track Controls</p>
-        <audio id="myAudio" src="audio-file.mp3"></audio>
+        <audio id="myAudio"></audio>
+
+<script>
+  // Set the daily audio file based on the local date
+  const localDate = new Date();
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+
+    const todayString = year + '-' + month + '-' + day; 
+  
+  // Dynamically apply the date to the audio player source
+  document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+
+</script>
+
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
         <button class="audio-icon-btn" onclick="stopAudio()">■</button>
