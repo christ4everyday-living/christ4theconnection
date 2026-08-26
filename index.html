@@ -291,7 +291,25 @@
     const todayString = year + '-' + month + '-' + day; 
   
   // Dynamically apply the date to the audio player source
-  document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+
+// Fetch the live daily word file
+fetch('today-word.json')
+    .then(response => {
+        if (!response.ok) throw new Error('Live text file not found');
+        return response.json();
+    })
+    .then(data => {
+        if (data.verse) document.querySelector('.verse-text').innerText = data.verse;
+        if (data.reference) document.querySelector('.verse-reference').innerText = data.reference;
+    })
+    .catch(error => {
+        console.warn('Using default fallback text:', error.message);
+        // Default text if file is updating
+        document.querySelector('.verse-text').innerText = '"Though they curse, You will bless. When they rise up, they will be put to shame, but Your servant will rejoice."';
+        document.querySelector('.verse-reference').innerText = '— Psalm 109:28';
+    });
+
 
 </script>
 
