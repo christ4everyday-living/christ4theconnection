@@ -282,36 +282,27 @@
         <audio id="myAudio" src="audio-file.mp3"></audio>
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
-        const localDate = new Date();
-const year = localDate.getFullYear();
-const month = String(localDate.getMonth() + 1).padStart(2, '0');
-const day = String(localDate.getDate()).padStart(2, '0');
-const todayString = year + '-' + month + '-' + day;
-
+        // Direct file setup for the audio source string tracking
 const audioPlayer = document.getElementById('myAudio');
 if (audioPlayer) {
-  audioPlayer.src = 'audio-' + todayString + '.mp3';
+  audioPlayer.src = 'audio-2026-08-26.mp3';
 }
 
+// Fetch daily word layout safely from your data file
 fetch('today-word.json')
-  .then(response => {
-    if (!response.ok) throw new Error('Live text file not found');
-    return response.json();
-  })
+  .then(response => response.json())
   .then(data => {
     const textElement = document.querySelector('.verse-text');
     const refElement = document.querySelector('.verse-reference');
-    if (textElement && data.verse) textElement.innerText = data.verse;
-    if (refElement && data.reference) refElement.innerText = data.reference;
-  })
-  .catch(error => {
-    console.error('Handled text parsing failure safely:', error);
+    
+    if (textElement && data.verse) {
+      textElement.innerText = data.verse;
+    }
+    if (refElement && data.reference) {
+      refElement.innerText = data.reference;
+    }
   });
 
-    var year = now.getFullYear();
-    var month = String(now.getMonth() + 1).padStart(2, '0');
-    var day = String(now.getDate()).padStart(2, '0');
-    var dateString = year + '-' + month + '-' + day;
 
     var jsonUrl = 'word-' + dateString + '.json';
     var audioUrl = 'audio-' + dateString + '.mp3';
