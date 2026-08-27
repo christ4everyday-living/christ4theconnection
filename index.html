@@ -282,37 +282,34 @@
         <audio id="myAudio" src="audio-file.mp3"></audio>
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
-        <button class="audio-icon-btn" onclick="stopAudio()">■</button>
-      </div>
-    </div>
-    
-    <div class="btn-group">
-      <button class="nav-btn" onclick="showPage('home')">Back Home</button>
-      <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
-    </div>
-    <div class="footer-copyright">
-      Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
-    </div>
-  </div>
+        const localDate = new Date();
+const year = localDate.getFullYear();
+const month = String(localDate.getMonth() + 1).padStart(2, '0');
+const day = String(localDate.getDate()).padStart(2, '0');
+const todayString = year + '-' + month + '-' + day;
 
-  <!-- Page 3: Video Page -->
-  <div id="video" class="page">
-    <div></div>
-    <div class="podcast-link-box">
-      <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
-              <a href="#" id="spotify-video-btn" class="play-icon-btn">▶</a>
+// Safe assignment for the audio player source tracking
+const audioPlayer = document.getElementById('myAudio');
+if (audioPlayer) {
+  audioPlayer.src = 'audio-' + todayString + '.mp3';
+}
 
-    </div>
-    <div class="btn-group">
-      <button class="mini-btn" onclick="showPage('home')">Back Home</button>
-      <button class="mini-btn" onclick="showPage('audio')">Go to Audio</button>
-    </div>
-    <div class="footer-copyright">
-      &copy; 2026 Christ 4 Every Day Living. All Rights Reserved.
-    </div>
-  </div>
+// Fetch daily word with safety catching to prevent button crashes
+fetch('today-word.json')
+  .then(response => {
+    if (!response.ok) throw new Error('Live text file not found');
+    return response.json();
+  })
+  .then(data => {
+    const textElement = document.querySelector('.verse-text');
+    const refElement = document.querySelector('.verse-reference');
+    if (textElement && data.verse) textElement.innerText = data.verse;
+    if (refElement && data.reference) refElement.innerText = data.reference;
+  })
+  .catch(error => {
+    console.error('Handled text parsing failure safely:', error);
+  });
 
-  <script>
   // AUTOMATIC DAILY VISUAL AND AUDIO SWITCHER
   function loadDailyContent() {
     var now = new Date();
