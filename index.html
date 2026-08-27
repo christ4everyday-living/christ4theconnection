@@ -270,8 +270,8 @@
     <div class="word-container">
       <h2>Daily Word</h2>
       <div class="verse-display-box">
-        <p class="verse-text">"The one who lives under the protection of the Most High dwells in the shadow of the Almighty. I will say to the LORD, My refuge and my fortress, my God, in whom I trust."</p>
-        <span class="verse-reference">— Psalm 91:1-2</span>
+        <p class="verse-text">"Though they curse, You will bless. When they rise up, they will be put to shame, but Your servant will rejoice."</p>
+        <span class="verse-reference">— Psalm 109:28</span>
       </div>
       <p class="meditation-message">God, Your Word is meant to be a Daily Word for us to read it, study it, meditate on it, accept it and apply it to our every day lives. In Jesus' Name, Amen.</p>
     </div>
@@ -279,63 +279,91 @@
     <div style="width: 100%;">
       <div class="control-box">
         <p>Audio Track Controls</p>
-        <audio id="myAudio" src="audio-file.mp3"></audio>
+        <audio id="myAudio"></audio>
+
+<script>
+  // Set the daily audio file based on the local date
+  const localDate = new Date();
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+
+    const todayString = year + '-' + month + '-' + day; 
+  
+  // Dynamically apply the date to the audio player source
+document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+
+// Fetch the live daily word file
+fetch('today-word.json')
+    .then(response => {
+        if (!response.ok) throw new Error('Live text file not found');
+        return response.json();
+    })
+    .then(data => {
+        if (data.verse) document.querySelector('.verse-text').innerText = data.verse;
+        if (data.reference) document.querySelector('.verse-reference').innerText = data.reference;
+    })
+    .catch(error => {
+        console.warn('Using default fallback text:', error.message);
+        // Default text if file is updating
+        document.querySelector('.verse-text').innerText = '"Though they curse, You will bless. When they rise up, they will be put to shame, but Your servant will rejoice."';
+        document.querySelector('.verse-reference').innerText = '— Psalm 109:28';
+    });
+
+
+</script>
+
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
-const localDate = new Date();
-const year = localDate.getFullYear();
-const month = String(localDate.getMonth() + 1).padStart(2, '0');
-const day = String(localDate.getDate()).padStart(2, '0');
-const todayString = year + '-' + month + '-' + day;
+        <button class="audio-icon-btn" onclick="stopAudio()">■</button>
+      </div>
+    </div>
+    
+    <div class="btn-group">
+      <button class="nav-btn" onclick="showPage('home')">Back Home</button>
+      <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
+    </div>
+    <div class="footer-copyright">
+      Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
+    </div>
+  </div>
 
-function loadDailyContent() {
-  const audioPlayer = document.getElementById('myAudio');
-  if (audioPlayer) {
-    audioPlayer.src = 'audio-' + todayString + '.mp3';
-    audioPlayer.load();
-  }
+  <!-- Page 3: Video Page -->
+  <div id="video" class="page">
+    <div></div>
+    <div class="podcast-link-box">
+      <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
+      <a href="https://open.spotify.com/show/033yDLO7L6tSxbxcufKvIN" target="_blank" class="play-icon-btn" title="Listen on Spotify">📹</a>
+    </div>
+    <div class="btn-group">
+      <button class="mini-btn" onclick="showPage('home')">Back Home</button>
+      <button class="mini-btn" onclick="showPage('audio')">Go to Audio</button>
+    </div>
+    <div class="footer-copyright">
+      &copy; 2026 Christ 4 Every Day Living. All Rights Reserved.
+    </div>
+  </div>
 
-  fetch('today-word.json')
-    .then(response => response.json())
-    .then(data => {
-      const textElement = document.querySelector('.verse');
-      const refElement = document.querySelector('.verse-location');
-      if (textElement && data.verse) textElement.innerText = data.verse;
-      if (refElement && data.reference) refElement.innerText = data.reference;
-    })
-    .catch(err => console.log('JSON load error:', err));
-}
+  <script>
+    function showPage(pageId) { 
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+      document.getElementById(pageId).classList.add('active'); 
+    }
+    
+    var audio = document.getElementById("myAudio");
+    function playAudio() { audio.play(); }
+    function pauseAudio() { audio.pause(); }
+    function stopAudio() { audio.pause(); audio.currentTime = 0; }
 
-loadDailyContent();
+    function updateTickerDate() {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var today  = new Date();
+      var dateString = today.toLocaleDateString("en-US", options);
+      document.getElementById("dateTicker").innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
+    }
+    updateTickerDate();
 
-function showPage(pageId) { 
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
-  document.getElementById(pageId).classList.add('active'); 
-}
-
-const audio = document.getElementById("myAudio");
-function playAudio() { if (audio) audio.play(); }
-function pauseAudio() { if (audio) audio.pause(); }
-function stopAudio() { if (audio) { audio.pause(); audio.currentTime = 0; } }
-
-function updateTickerDate() {
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const today = new Date();
-  const dateString = today.toLocaleDateString("en-US", options);
-  const ticker = document.getElementById("dateTicker");
-  if (ticker) ticker.innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
-}
-updateTickerDate();
-
-document.addEventListener("DOMContentLoaded", function() {
-  const videoBtn = document.getElementById("spotify-video-btn");
-  if (!videoBtn) return;
-  videoBtn.addEventListener("click", function(e) {
-    e.preventDefault();
-    window.open("https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt", "_blank");
-  });
-});
-
-if ('serviceWorker' in navigator) { 
-  navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); 
-}
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); }
+  </script>
+</body>
+</html>
