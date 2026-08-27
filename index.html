@@ -288,13 +288,11 @@ const month = String(localDate.getMonth() + 1).padStart(2, '0');
 const day = String(localDate.getDate()).padStart(2, '0');
 const todayString = year + '-' + month + '-' + day;
 
-// Safe assignment for the audio player source tracking
 const audioPlayer = document.getElementById('myAudio');
 if (audioPlayer) {
   audioPlayer.src = 'audio-' + todayString + '.mp3';
 }
 
-// Fetch daily word with safety catching to prevent button crashes
 fetch('today-word.json')
   .then(response => {
     if (!response.ok) throw new Error('Live text file not found');
@@ -310,9 +308,6 @@ fetch('today-word.json')
     console.error('Handled text parsing failure safely:', error);
   });
 
-  // AUTOMATIC DAILY VISUAL AND AUDIO SWITCHER
-  function loadDailyContent() {
-    var now = new Date();
     var year = now.getFullYear();
     var month = String(now.getMonth() + 1).padStart(2, '0');
     var day = String(now.getDate()).padStart(2, '0');
