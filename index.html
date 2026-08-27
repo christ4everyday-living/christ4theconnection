@@ -282,92 +282,60 @@
         <audio id="myAudio" src="audio-file.mp3"></audio>
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
-        // Direct file setup for the audio source string tracking
-const audioPlayer = document.getElementById('myAudio');
-if (audioPlayer) {
-  audioPlayer.src = 'audio-2026-08-26.mp3';
+const localDate = new Date();
+const year = localDate.getFullYear();
+const month = String(localDate.getMonth() + 1).padStart(2, '0');
+const day = String(localDate.getDate()).padStart(2, '0');
+const todayString = year + '-' + month + '-' + day;
+
+function loadDailyContent() {
+  const audioPlayer = document.getElementById('myAudio');
+  if (audioPlayer) {
+    audioPlayer.src = 'audio-' + todayString + '.mp3';
+    audioPlayer.load();
+  }
+
+  fetch('today-word.json')
+    .then(response => response.json())
+    .then(data => {
+      const textElement = document.querySelector('.verse');
+      const refElement = document.querySelector('.verse-location');
+      if (textElement && data.verse) textElement.innerText = data.verse;
+      if (refElement && data.reference) refElement.innerText = data.reference;
+    })
+    .catch(err => console.log('JSON load error:', err));
 }
 
-// Fetch daily word layout safely from your data file
-fetch('today-word.json')
-  .then(response => response.json())
-  .then(data => {
-    const textElement = document.querySelector('.verse-text');
-    const refElement = document.querySelector('.verse-reference');
-    
-    if (textElement && data.verse) {
-      textElement.innerText = data.verse;
-    }
-    if (refElement && data.reference) {
-      refElement.innerText = data.reference;
-    }
-  });
+loadDailyContent();
 
+function showPage(pageId) { 
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
+  document.getElementById(pageId).classList.add('active'); 
+}
 
-    var jsonUrl = 'word-' + dateString + '.json';
-    var audioUrl = 'audio-' + dateString + '.mp3';
+const audio = document.getElementById("myAudio");
+function playAudio() { if (audio) audio.play(); }
+function pauseAudio() { if (audio) audio.pause(); }
+function stopAudio() { if (audio) { audio.pause(); audio.currentTime = 0; } }
 
-    // 1. Fetch text data and update elements safely using class queries
-    fetch(jsonUrl)
-      .then(function(res) { return res.json(); })
-      .then(function(data) {
-        var textElement = document.querySelector('.verse-text');
-        var refElement = document.querySelector('.verse-reference');
-        if (textElement) textElement.innerText = '"' + data.verse + '"';
-        if (refElement) refElement.innerText = '— ' + data.reference;
-      })
-      .catch(function(err) { console.log('JSON load error:', err); });
+function updateTickerDate() {
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const today = new Date();
+  const dateString = today.toLocaleDateString("en-US", options);
+  const ticker = document.getElementById("dateTicker");
+  if (ticker) ticker.innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
+}
+updateTickerDate();
 
-    // 2. Point the audio player to the correct dated file and initialize
-    var player = document.getElementById("myAudio");
-    if (player) {
-      player.src = audioUrl;
-      player.load();
-    }
-  }
-
-  // Run switcher immediately when the app screen loads
-  loadDailyContent();
-
-  // RETAIN YOUR EXISTING APP FUNCTIONS
-  function showPage(pageId) { 
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); 
-    document.getElementById(pageId).classList.add('active'); 
-  }
-  
-  var audio = document.getElementById("myAudio");
-  function playAudio() { audio.play(); }
-  function pauseAudio() { audio.pause(); }
-  function stopAudio() { audio.pause(); audio.currentTime = 0; }
-
-  function updateTickerDate() {
-    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    var today  = new Date();
-    var dateString = today.toLocaleDateString("en-US", options);
-    var ticker = document.getElementById("dateTicker");
-    if (ticker) ticker.innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
-  }
-  updateTickerDate();
-
-// AUTOMATED SPOTIFY VIDEO LINKER (SAFELY ADDED)
 document.addEventListener("DOMContentLoaded", function() {
-  var latestEpisodeId = "1Rkm9gMu2pMOxZ60TDrOBt";
-  var videoBtn = document.getElementById("spotify-video-btn");
+  const videoBtn = document.getElementById("spotify-video-btn");
   if (!videoBtn) return;
-
   videoBtn.addEventListener("click", function(e) {
     e.preventDefault();
-    // Universal HTTPS layout string bypasses iOS PWA sandboxing completely
-    window.open("https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt?si=LIGmOhjBQ6mhMpc_gp-YrA,"_blank");
-
+    window.open("https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt", "_blank");
   });
 });
 
-
-
- 
-  // SINGLE SERVICE WORKER REGISTRATION
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); }
-</script>
-</body>
-</html>
+if ('serviceWorker' in navigator) { 
+  navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); 
+}
