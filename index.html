@@ -282,13 +282,16 @@
         <audio id="myAudio"></audio>
 
 <script>
-  // Set the daily audio file based on the local date
-  const localDate = new Date();
-  const year = localDate.getFullYear();
-  const month = String(localDate.getMonth() + 1).padStart(2, '0');
-  const day = String(localDate.getDate()).padStart(2, '0');
+ const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
+const formatter = new Intl.DateTimeFormat('en-US', options);
+const parts = formatter.formatToParts(new Date());
 
-    const todayString = year + '-' + month + '-' + day; 
+const year = parts.find(p => p.type === 'year').value;
+const month = parts.find(p => p.type === 'month').value;
+const day = parts.find(p => p.type === 'day').value;
+
+const todayString = year + '-' + month + '-' + day;
+
   
   // Dynamically apply the date to the audio player source
 document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
