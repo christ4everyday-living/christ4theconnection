@@ -374,15 +374,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
   videoBtn.addEventListener("click", function(e) {
     e.preventDefault();
-    // Launch the deep-link immediately inside the native Spotify app
-    window.location.href = "spotify:episode:" + latestEpisodeId;
-    
-    // Web browser fallback if they don't have the app installed
-    setTimeout(function() {
-      window.open("https://open.spotify.com/episode/" + latestEpisodeId, "_blank");
-    }, 1500);
+    // Universal HTTPS layout string bypasses iOS PWA sandboxing completely
+    window.open("https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt?si=LIGmOhjBQ6mhMpc_gp-YrA,"_blank");
+
   });
 });
+
 
 
  
