@@ -281,34 +281,29 @@
         <p>Audio Track Controls</p>
         <audio id="myAudio"></audio>
 
-<script>
-  // Set the daily audio file based on the local date
-  const localDate = new Date();
-  const year = localDate.getFullYear();
-  const month = String(localDate.getMonth() + 1).padStart(2, '0');
-  const day = String(localDate.getDate()).padStart(2, '0');
+const today = new Date().toLocaleDateString('en-CA');
 
-    const todayString = year + '-' + month + '-' + day; 
-  
-  // Dynamically apply the date to the audio player source
-document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+const audioPlayer = document.querySelector('audio') || document.getElementById('audio-player'); 
+if (audioPlayer) {
+    audioPlayer.src = `audio-${today}.mp3`;
+}
 
-// Fetch the live daily word file
-fetch('today-word.json')
+fetch(`word-${today}.json`)
     .then(response => {
-        if (!response.ok) throw new Error('Live text file not found');
+        if (!response.ok) throw new Error('File not found');
         return response.json();
     })
     .then(data => {
-        if (data.verse) document.querySelector('.verse-text').innerText = data.verse;
-        if (data.reference) document.querySelector('.verse-reference').innerText = data.reference;
+        const textElement = document.getElementById('verse-text') || document.querySelector('.verse-text');
+        const refElement = document.getElementById('verse-reference') || document.querySelector('.verse-reference');
+        
+        if (textElement) textElement.innerText = data.verse;
+        if (refElement) refElement.innerText = data.reference;
     })
     .catch(error => {
-        console.warn('Using default fallback text:', error.message);
-        // Default text if file is updating
-        document.querySelector('.verse-text').innerText = '"Though they curse, You will bless. When they rise up, they will be put to shame, but Your servant will rejoice."';
-        document.querySelector('.verse-reference').innerText = '— Psalm 109:28';
+        console.error('Error loading today\'s files:', error);
     });
+
 
 
 </script>
