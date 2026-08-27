@@ -282,13 +282,10 @@
         <audio id="myAudio"></audio>
 
 <script>
- const options = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
-const formatter = new Intl.DateTimeFormat('en-US', options);
-const parts = formatter.formatToParts(new Date());
-
-const year = parts.find(p => p.type === 'year').value;
-const month = parts.find(p => p.type === 'month').value;
-const day = parts.find(p => p.type === 'day').value;
+const estDate = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}));
+const year = estDate.getFullYear();
+const month = String(estDate.getMonth() + 1).padStart(2, '0');
+const day = String(estDate.getDate()).padStart(2, '0');
 
 const todayString = year + '-' + month + '-' + day;
 
