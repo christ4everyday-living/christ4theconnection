@@ -270,44 +270,16 @@
     <div class="word-container">
       <h2>Daily Word</h2>
       <div class="verse-display-box">
-        <p class="verse-text">"Though they curse, You will bless. When they rise up, they will be put to shame, but Your servant will rejoice."</p>
-        <span class="verse-reference">— Psalm 109:28</span>
+        <p class="verse-text">"The one who lives under the protection of the Most High dwells in the shadow of the Almighty. I will say to the LORD, My refuge and my fortress, my God, in whom I trust."</p>
+        <span class="verse-reference">— Psalm 91:1-2</span>
       </div>
-      <p class="meditation-message">God, Your Word is meant to be a Daily Word for us to read it, study it, meditate on it, accept it and apply it to our every day lives. In Jesus' Name, Amen.</p>
+      <p class="meditation-message">God, Your Word is meant to be a Daily Word for us to read it, study it, meditate on it, accept it and apply it to our every day lives</p>
     </div>
 
     <div style="width: 100%;">
       <div class="control-box">
         <p>Audio Track Controls</p>
-        <audio id="myAudio"></audio>
-
-const today = new Date().toLocaleDateString('en-CA');
-
-const audioPlayer = document.querySelector('audio') || document.getElementById('audio-player'); 
-if (audioPlayer) {
-    audioPlayer.src = `audio-${today}.mp3`;
-}
-
-fetch(`word-${today}.json`)
-    .then(response => {
-        if (!response.ok) throw new Error('File not found');
-        return response.json();
-    })
-    .then(data => {
-        const textElement = document.getElementById('verse-text') || document.querySelector('.verse-text');
-        const refElement = document.getElementById('verse-reference') || document.querySelector('.verse-reference');
-        
-        if (textElement) textElement.innerText = data.verse;
-        if (refElement) refElement.innerText = data.reference;
-    })
-    .catch(error => {
-        console.error('Error loading today\'s files:', error);
-    });
-
-
-
-</script>
-
+        <audio id="myAudio" src="audio-file.mp3"></audio>
         <button class="audio-icon-btn" onclick="playAudio()">▶</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
         <button class="audio-icon-btn" onclick="stopAudio()">■</button>
