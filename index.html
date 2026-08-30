@@ -414,7 +414,7 @@ scheduleNextMidnightUpdate();
         <p style="margin:0;font-size:18px;font-weight:bold;letter-spacing:0.5px;">Listen on Spotify</p>
 
         <!-- primary link to the episode (tries deep link first, then opens web fallback) -->
-        <a href="#" onclick="openSpotifyEpisode(event)"
+        <a href="https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt" onclick="openSpotifyEpisode(event, this.href)"
            class="play-icon-btn"
            aria-label="Open episode on Spotify"
            title="Open episode on Spotify">
@@ -426,9 +426,8 @@ scheduleNextMidnightUpdate();
         </a>
 
         <!-- secondary action: download Spotify app (compact) -->
-        <a href="https://www.spotify.com/download"
-           target="_blank"
-           rel="noopener noreferrer"
+        <a id="downloadAppBtn"
+           href="#"
            class="mini-btn download-btn"
            aria-label="Download Spotify app"
            title="Download Spotify app">
@@ -447,7 +446,7 @@ scheduleNextMidnightUpdate();
     <div></div>
     <div class="podcast-link-box">
       <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
-      <a href="#" onclick="openSpotifyEpisode(event)" class="play-icon-btn" title="Listen here/Watch on Spotify app">
+      <a href="https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt" onclick="openSpotifyEpisode(event, this.href)" class="play-icon-btn" title="Listen here/Watch on Spotify app">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M8 5v14l11-7z" />
         </svg>
@@ -474,32 +473,70 @@ scheduleNextMidnightUpdate();
     function pauseAudio() { audio.pause(); }
     function stopAudio() { audio.pause(); audio.currentTime = 0; }
 
-    // Try to open the Spotify app via deep link. If the app isn't available, open the web fallback.
-    function openSpotifyEpisode(event) {
+    // Try to open the Spotify app via deep link with a visibilitychange-based fallback.
+    function openSpotifyEpisode(event, webUrl) {
+      // Allow middle/right clicks and other non-left clicks to act like a normal link
+      if (event && event.button && event.button !== 0) return;
       if (event) event.preventDefault();
+
       var deep = 'spotify:episode:1Rkm9gMu2pMOxZ60TDrOBt';
-      var web = 'https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt';
+      var web = webUrl || 'https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt';
 
-      // Start a timer to open the web fallback after a short delay
-      var fallback = setTimeout(function() {
-        window.open(web, '_blank', 'noopener');
-      }, 900);
+      var didHide = false;
+      function onVisibility() {
+        if (document.hidden) { didHide = true; cleanup(); }
+      }
+      function cleanup() {
+        document.removeEventListener('visibilitychange', onVisibility);
+        if (fallbackTimer) clearTimeout(fallbackTimer);
+        try { if (ifr) document.body.removeChild(ifr); } catch (e) {}
+      }
 
-      // Try to open the native app via an iframe (works on many mobile/desktop combos)
+      document.addEventListener('visibilitychange', onVisibility);
+
+      // Create a hidden iframe to attempt the deep link (common pattern)
       var ifr = document.createElement('iframe');
       ifr.style.display = 'none';
       ifr.src = deep;
       document.body.appendChild(ifr);
 
-      // Clean up iframe shortly after
-      setTimeout(function() {
-        try { document.body.removeChild(ifr); } catch (e) {}
-        // If the native app opened, the browser will have blurred/unloaded the page and
-        // the fallback won't run. If not, fallback will trigger.
-      }, 1000);
+      // If the page doesn't become hidden (app didn't open), open the web fallback after 1200ms
+      var fallbackTimer = setTimeout(function() {
+        if (!didHide) {
+          window.open(web, '_blank', 'noopener');
+        }
+        cleanup();
+      }, 1200);
 
+      // Only attempt top-level location change on mobile devices (safer)
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      var isAndroid = /Android/.test(ua);
+      if (isIOS || isAndroid) {
+        setTimeout(function(){ try { window.location.href = deep; } catch (e) {} }, 100);
+      }
+
+      console.log('Attempted deep link to Spotify, web fallback scheduled');
       return false;
     }
+
+    // Set platform-specific download link for the Download App button
+    (function setDownloadLink() {
+      var ua = navigator.userAgent || '';
+      var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+      var isAndroid = /Android/.test(ua);
+      var downloadBtn = document.getElementById('downloadAppBtn');
+      if (!downloadBtn) return;
+      if (isIOS) {
+        downloadBtn.href = 'https://apps.apple.com/app/spotify-music-and-podcasts/id324684580';
+      } else if (isAndroid) {
+        downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.spotify.music';
+      } else {
+        downloadBtn.href = 'https://www.spotify.com/download';
+      }
+      downloadBtn.target = '_blank';
+      downloadBtn.rel = 'noopener noreferrer';
+    })();
 
     function updateTickerDate() {
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
