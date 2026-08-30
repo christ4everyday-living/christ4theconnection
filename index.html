@@ -162,16 +162,22 @@
     }
     
     .play-icon-btn {
-      display: inline-block;
-      font-size: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: transparent;
       color: #6E473B;
       text-decoration: none;
       margin-top: 10px;
       transition: transform 0.1s ease;
       cursor: pointer;
+      border-radius: 8px;
     }
-    .play-icon-btn:hover { color: #D4AF37; }
-    .play-icon-btn:active { transform: scale(0.9); }
+    .play-icon-btn svg { width: 28px; height: 28px; fill: #6E473B; }
+    .play-icon-btn:hover svg { fill: #D4AF37; }
+    .play-icon-btn:active { transform: scale(0.95); }
 
     .btn-group { 
       width: 100%; 
@@ -218,6 +224,8 @@
       box-shadow: 0 1px 0 #3D251F, 0 2px 4px rgba(0,0,0,0.6); 
     }
 
+    .download-btn { padding: 6px 10px; font-size: 12px; }
+
     .audio-icon-btn { 
       background: #333; 
       color: white; 
@@ -234,6 +242,11 @@
       transform: translateY(2px); 
       box-shadow: 0 1px 0 #111; 
     }
+
+    /* Focus styles for accessibility */
+    .play-icon-btn:focus, .mini-btn:focus, .download-btn:focus { outline: 3px solid #D4AF37; outline-offset: 3px; }
+
+    .sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
 
     .footer-copyright {
       font-size: 11px;
@@ -400,25 +413,29 @@ scheduleNextMidnightUpdate();
       <div style="display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;">
         <p style="margin:0;font-size:18px;font-weight:bold;letter-spacing:0.5px;">Listen on Spotify</p>
 
-        <!-- primary link to the episode (opens in a new tab) -->
-        <a href="https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt"
-           target="_blank"
-           rel="noopener noreferrer"
+        <!-- primary link to the episode (tries deep link first, then opens web fallback) -->
+        <a href="#" onclick="openSpotifyEpisode(event)"
            class="play-icon-btn"
            aria-label="Open episode on Spotify"
-           title="Open episode on Spotify">📹</a>
+           title="Open episode on Spotify">
+          <!-- Inline SVG play icon -->
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <span class="sr-only">Open episode on Spotify</span>
+        </a>
 
-        <!-- secondary action: download Spotify app -->
+        <!-- secondary action: download Spotify app (compact) -->
         <a href="https://www.spotify.com/download"
            target="_blank"
            rel="noopener noreferrer"
-           class="mini-btn"
+           class="mini-btn download-btn"
            aria-label="Download Spotify app"
            title="Download Spotify app">
-          Download Spotify App
+          Download App
         </a>
       </div>
-      <p style="margin:8px 0 0 0;font-size:13px;color:#ccc;">Tip: Use "Download Spotify App" to view the video in the Spotify client for the best experience.</p>
+      <p style="margin:8px 0 0 0;font-size:13px;color:#ccc;">Tip: Use "Download App" to view the video in the Spotify client for the best experience.</p>
     </div>
     <div class="footer-copyright">
       Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
@@ -430,7 +447,12 @@ scheduleNextMidnightUpdate();
     <div></div>
     <div class="podcast-link-box">
       <p style="margin:0; font-size: 18px; font-weight: bold; letter-spacing: 0.5px;">Video Podcast</p>
-      <a href="https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt" target="_blank" class="play-icon-btn" title="Listen here/Watch on Spotify app">📹</a>
+      <a href="#" onclick="openSpotifyEpisode(event)" class="play-icon-btn" title="Listen here/Watch on Spotify app">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        <span class="sr-only">Open episode on Spotify</span>
+      </a>
     </div>
     <div class="btn-group">
       <button class="mini-btn" onclick="showPage('home')">Back Home</button>
@@ -451,6 +473,33 @@ scheduleNextMidnightUpdate();
     function playAudio() { audio.play(); }
     function pauseAudio() { audio.pause(); }
     function stopAudio() { audio.pause(); audio.currentTime = 0; }
+
+    // Try to open the Spotify app via deep link. If the app isn't available, open the web fallback.
+    function openSpotifyEpisode(event) {
+      if (event) event.preventDefault();
+      var deep = 'spotify:episode:1Rkm9gMu2pMOxZ60TDrOBt';
+      var web = 'https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt';
+
+      // Start a timer to open the web fallback after a short delay
+      var fallback = setTimeout(function() {
+        window.open(web, '_blank', 'noopener');
+      }, 900);
+
+      // Try to open the native app via an iframe (works on many mobile/desktop combos)
+      var ifr = document.createElement('iframe');
+      ifr.style.display = 'none';
+      ifr.src = deep;
+      document.body.appendChild(ifr);
+
+      // Clean up iframe shortly after
+      setTimeout(function() {
+        try { document.body.removeChild(ifr); } catch (e) {}
+        // If the native app opened, the browser will have blurred/unloaded the page and
+        // the fallback won't run. If not, fallback will trigger.
+      }, 1000);
+
+      return false;
+    }
 
     function updateTickerDate() {
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
