@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 48">
+  <rect width="150" height="48" rx="6" fill="#000" />
+  <!-- Play icon -->
+  <g transform="translate(10,6)">
+    <polygon points="0,0 0,36 30,18" fill="#34A853" />
+    <polygon points="30,0 30,36 60,18" fill="#4285F4" opacity="0.95" />
+  </g>
+  <text x="74" y="24" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="12">Get it on</text>
+  <text x="74" y="38" fill="#fff" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="700">Google Play</text>
+</svg>
