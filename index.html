@@ -224,7 +224,8 @@
       box-shadow: 0 1px 0 #3D251F, 0 2px 4px rgba(0,0,0,0.6); 
     }
 
-    .download-btn { padding: 6px 10px; font-size: 12px; }
+    .store-btn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; font-size: 13px; border-radius: 8px; text-decoration: none; }
+    .store-btn svg { width: 20px; height: 20px; }
 
     .audio-icon-btn { 
       background: #333; 
@@ -244,7 +245,7 @@
     }
 
     /* Focus styles for accessibility */
-    .play-icon-btn:focus, .mini-btn:focus, .download-btn:focus { outline: 3px solid #D4AF37; outline-offset: 3px; }
+    .play-icon-btn:focus, .mini-btn:focus, .store-btn:focus { outline: 3px solid #D4AF37; outline-offset: 3px; }
 
     .sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
 
@@ -425,16 +426,24 @@ scheduleNextMidnightUpdate();
           <span class="sr-only">Open episode on Spotify</span>
         </a>
 
-        <!-- secondary action: download Spotify app (compact) -->
-        <a id="downloadAppBtn"
-           href="#"
-           class="mini-btn download-btn"
-           aria-label="Download Spotify app"
-           title="Download Spotify app">
-          Download App
+        <!-- platform-specific store badges -->
+        <a id="appStoreBtn" class="store-btn" href="#" aria-label="Download on the App Store" title="Download on the App Store">
+          <!-- Apple icon -->
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="#fff" d="M16.365 1.43c-.76.87-1.56 1.57-2.55 1.57-.05 0-.11 0-.16-.01-1.07-.06-2.14.63-2.85 1.3-.59.57-.99 1.32-1.06 2.11-.12 1.34.55 2.34 1.61 3.14.56.44 1.17.8 1.8 1.06.67.28 1.39.5 2.14.5.96 0 1.89-.28 2.75-.73.88-.46 1.7-1.06 2.4-1.8.48-.51.86-1.1 1.08-1.76.28-.8.25-1.66-.06-2.42-.27-.65-.79-1.2-1.45-1.5-1.05-.49-2.17-.08-3.01.61z"/>
+          </svg>
+          <span style="color:#fff;">App Store</span>
+        </a>
+
+        <a id="playStoreBtn" class="store-btn" href="#" aria-label="Get it on Google Play" title="Get it on Google Play">
+          <!-- Google Play icon -->
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path fill="#fff" d="M3.5 2.3L16 12 3.5 21.7 3.5 2.3zM21.1 12.8l-2.7-1.5-2.7 1.5 2.7 1.5 2.7-1.5z"/>
+          </svg>
+          <span style="color:#fff;">Google Play</span>
         </a>
       </div>
-      <p style="margin:8px 0 0 0;font-size:13px;color:#ccc;">Tip: Use "Download App" to view the video in the Spotify client for the best experience.</p>
+      <p style="margin:8px 0 0 0;font-size:13px;color:#ccc;">Tip: Download the Spotify app for the best video experience, or open in your browser to listen only.</p>
     </div>
     <div class="footer-copyright">
       Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
@@ -520,22 +529,24 @@ scheduleNextMidnightUpdate();
       return false;
     }
 
-    // Set platform-specific download link for the Download App button
-    (function setDownloadLink() {
+    // Set platform-specific download links and visibility for the store badges
+    (function setStoreButtons() {
       var ua = navigator.userAgent || '';
       var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
       var isAndroid = /Android/.test(ua);
-      var downloadBtn = document.getElementById('downloadAppBtn');
-      if (!downloadBtn) return;
-      if (isIOS) {
-        downloadBtn.href = 'https://apps.apple.com/app/spotify-music-and-podcasts/id324684580';
-      } else if (isAndroid) {
-        downloadBtn.href = 'https://play.google.com/store/apps/details?id=com.spotify.music';
-      } else {
-        downloadBtn.href = 'https://www.spotify.com/download';
-      }
-      downloadBtn.target = '_blank';
-      downloadBtn.rel = 'noopener noreferrer';
+      var appBtn = document.getElementById('appStoreBtn');
+      var playBtn = document.getElementById('playStoreBtn');
+      if (!appBtn || !playBtn) return;
+
+      appBtn.href = 'https://apps.apple.com/app/spotify-music-and-podcasts/id324684580';
+      playBtn.href = 'https://play.google.com/store/apps/details?id=com.spotify.music';
+      appBtn.target = '_blank'; appBtn.rel = 'noopener noreferrer';
+      playBtn.target = '_blank'; playBtn.rel = 'noopener noreferrer';
+
+      // Show only the relevant button on mobile; show both on desktop
+      if (isIOS) { playBtn.style.display = 'none'; }
+      else if (isAndroid) { appBtn.style.display = 'none'; }
+      else { appBtn.style.display = 'inline-flex'; playBtn.style.display = 'inline-flex'; }
     })();
 
     function updateTickerDate() {
