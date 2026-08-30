@@ -210,6 +210,8 @@
       border-radius: 6px; 
       cursor: pointer; 
       box-shadow: 0 3px 0 #3D251F, 0 5px 10px rgba(0,0,0,0.6);
+      text-decoration: none;
+      display: inline-block;
     }
     .mini-btn:active { 
       transform: translateY(2px); 
@@ -270,7 +272,7 @@
     <div class="word-container">
       <h2>Daily Word</h2>
       <div class="verse-display-box">
-        <p class="verse-text">"The one who lives under the protection of the Most High dwells in the shadow of the Almighty. I will say to the LORD, My refuge and my fortress, my God, in whom I trust."</p>
+        <p class="verse-text">"The one who lives under the protection of the Most High dwells in the shadow of the Almighty. I will say to the LORD, My refuge and my fortress, my God, in whom I t[...]"
         <span class="verse-reference">— Psalm 91:1-2</span>
       </div>
       <p class="meditation-message">God, Your Word is meant to be a Daily Word for us to read it, study it, meditate on it, accept it and apply it to our every day lives. In Jesus' Name, Amen.</p>
@@ -393,6 +395,30 @@ scheduleNextMidnightUpdate();
     <div class="btn-group">
       <button class="nav-btn" onclick="showPage('home')">Back Home</button>
       <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
+    </div>
+    <div class="podcast-link-box">
+      <div style="display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <p style="margin:0;font-size:18px;font-weight:bold;letter-spacing:0.5px;">Listen on Spotify</p>
+
+        <!-- primary link to the episode (opens in a new tab) -->
+        <a href="https://open.spotify.com/episode/1Rkm9gMu2pMOxZ60TDrOBt"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="play-icon-btn"
+           aria-label="Open episode on Spotify"
+           title="Open episode on Spotify">📹</a>
+
+        <!-- secondary action: download Spotify app -->
+        <a href="https://www.spotify.com/download"
+           target="_blank"
+           rel="noopener noreferrer"
+           class="mini-btn"
+           aria-label="Download Spotify app"
+           title="Download Spotify app">
+          Download Spotify App
+        </a>
+      </div>
+      <p style="margin:8px 0 0 0;font-size:13px;color:#ccc;">Tip: Use "Download Spotify App" to view the video in the Spotify client for the best experience.</p>
     </div>
     <div class="footer-copyright">
       Scripture quotations are taken from the Holman Christian Standard Bible&reg; (HCSB), copyright &copy; 1999&ndash;2009 by Holman Bible Publishers, used by permission.
