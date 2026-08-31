@@ -389,22 +389,22 @@ function scheduleNextMidnightUpdate() {
 loadTodaysVerse();
 scheduleNextMidnightUpdate();
 </script>
-
-        <button class="audio-icon-btn" onclick="playAudio()">▶</button>
-        <button class="audio-icon-btn" onclick="pauseAudio()">❚❚</button>
-        <button class="audio-icon-btn" onclick="stopAudio()">■</button>
-      </div>
-    </div>
-    
-    <div class="btn-group">
-      <button class="nav-btn" onclick="showPage('home')">Back Home</button>
-      <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
-    </div>
-    <div class="footer-copyright">
-  <audio id="myAudio" src=""></audio>
-  <span id="bible-disclaimer"></span>
+    <button class="audio-icon-btn" onclick="playAudio()"></button>
+    <button class="audio-icon-btn" onclick="pauseAudio()">||</button>
+    <button class="audio-icon-btn" onclick="stopAudio()"></button>
+  </div>
 </div>
 
+<audio id="myAudio" src=""></audio>
+
+<div class="btn-group">
+  <button class="nav-btn" onclick="showPage('home')">Back Home</button>
+  <button class="nav-btn" onclick="showPage('video')">Go to Video</button>
+</div>
+
+<div class="footer-copyright">
+  <span id="bible-disclaimer"></span>
+</div>
 
   </div>
 
