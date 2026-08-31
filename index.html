@@ -306,6 +306,7 @@ function setDailyAudioSource() {
 
   const candidates = [
     'audio-' + todayString + '.mp3',
+    // Backward-compatible fallback for older/mistyped files like audio-YYYY-MM.DD.mp3
     'audio-' + year + '-' + month + '.' + day + '.mp3'
   ];
 
@@ -477,7 +478,7 @@ scheduleNextMidnightUpdate();
       if (!audio) {
         return;
       }
-      if (!audio.getAttribute("src")) {
+      if (!audio.src) {
         updateAudioStatus("Audio source is missing.");
         return;
       }
