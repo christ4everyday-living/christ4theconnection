@@ -279,125 +279,13 @@
     <div style="width: 100%;">
       <div class="control-box">
         <p>Audio Track Controls</p>
-        <audio id="myAudio"></audio>
-
-<script>
-  // Set the daily audio file based on the local date
-const localDate = new Date();
-const year = localDate.getFullYear();
-const month = String(localDate.getMonth() + 1).padStart(2, '0');
-const day = String(localDate.getDate()).padStart(2, '0');
-
-const todayString = year + '-' + month + '-' + day; 
-
-// Dynamically apply the date to the audio player source
-document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
-
-// Fallback messages
-const comingSoonVerse = {
-  verse: "Coming soon...",
-  reference: "Coming soon..."
-};
-
-const technicalDifficultiesVerse = {
-  verse: "We're having technical difficulties",
-  reference: "Please try again later"
-};
-
-// Function to load today's verse from dated JSON file
-async function loadTodaysVerse() {
-  const dateString = `${year}-${month}-${day}`;
-  const filePath = `json/word-${dateString}.json`;
-  
-  try {
-    const response = await fetch(filePath);
-    
-    // If file doesn't exist yet (404), use "Coming soon..." fallback
-    if (!response.ok) {
-      if (response.status === 404) {
-        console.log('Verse file not yet created, using "Coming soon..." fallback');
-        displayVerse(comingSoonVerse);
-        localStorage.setItem('currentVerse', JSON.stringify(comingSoonVerse));
-        return;
-      }
-      throw new Error(`Error loading file: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Validate the data has verse and reference
-    if (!data.verse || !data.reference) {
-      throw new Error('Invalid verse data format');
-    }
-    
-    displayVerse(data);
-    localStorage.setItem('currentVerse', JSON.stringify(data));
-    localStorage.setItem('verseDate', dateString);
-    
-    console.log('✓ Loaded verse for ' + dateString);
-  } catch (error) {
-    console.warn('Error loading verse:', error.message);
-    
-    // Try fallback from localStorage
-    const cached = localStorage.getItem('currentVerse');
-    if (cached) {
-      console.log('Using cached verse');
-      displayVerse(JSON.parse(cached));
-    } else {
-      // Last resort: show technical difficulties message
-      console.log('Using technical difficulties fallback');
-      displayVerse(technicalDifficultiesVerse);
-      localStorage.setItem('currentVerse', JSON.stringify(technicalDifficultiesVerse));
-    }
-  }
-}
-
-// Function to display verse on the page
-function displayVerse(data) {
-    if (data.verse) {
-        document.querySelector('.verse-text').innerText = '"' + data.verse + '"';
-    }
-    if (data.reference) {
-        document.querySelector('.verse-reference').innerText = '- ' + data.reference;
-    }
-    if (data.disclaimer) {
-        document.getElementById('bible-disclaimer').innerText = data.disclaimer;
-    } else {
-        document.getElementById('bible-disclaimer').innerText = '';
-    }
-}
-
-
-// Schedule midnight updates
-function scheduleNextMidnightUpdate() {
-  const now = new Date();
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
-  
-  const timeUntilMidnight = tomorrow - now;
-  
-  console.log('Next verse update in ' + Math.round(timeUntilMidnight / 1000 / 60) + ' minutes');
-  
-  setTimeout(() => {
-    console.log('🌙 Midnight! Updating verse and audio...');
-    location.reload(); // Reload page to get new date
-  }, timeUntilMidnight);
-}
-
-// Load verse on page load
-loadTodaysVerse();
-scheduleNextMidnightUpdate();
-</script>
+        <audio id="myAudio" src=""></audio>
         <div class="audio-controls-container">
-        <button class="audio-icon-btn" onclick="playAudio()">Play</button>
-        <button class="audio-icon-btn" onclick="pauseAudio()">Pause</button>
-        <button class="audio-icon-btn" onclick="stopAudio()">Stop</button>
-    </div>
-
-</div>
-
-<audio id="myAudio" src=""></audio>
+          <button class="audio-icon-btn" onclick="playAudio()">Play</button>
+          <button class="audio-icon-btn" onclick="pauseAudio()">Pause</button>
+          <button class="audio-icon-btn" onclick="stopAudio()">Stop</button>
+        </div>
+      </div>
 
 <div class="btn-group">
   <button class="nav-btn" onclick="showPage('home')">Back Home</button>
@@ -445,6 +333,75 @@ scheduleNextMidnightUpdate();
       document.getElementById("dateTicker").innerText = "Christ 4 Every Day Living: The Connection • " + dateString + " • ";
     }
     updateTickerDate();
+
+    // Set the daily audio file based on the local date
+    const localDate = new Date();
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const todayString = year + '-' + month + '-' + day;
+
+    document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+
+    const comingSoonVerse = { verse: "Coming soon...", reference: "Coming soon..." };
+    const technicalDifficultiesVerse = { verse: "We're having technical difficulties", reference: "Please try again later" };
+
+    async function loadTodaysVerse() {
+      const dateString = `${year}-${month}-${day}`;
+      const filePath = `json/word-${dateString}.json`;
+      try {
+        const response = await fetch(filePath);
+        if (!response.ok) {
+          if (response.status === 404) {
+            console.log('Verse file not yet created, using "Coming soon..." fallback');
+            displayVerse(comingSoonVerse);
+            localStorage.setItem('currentVerse', JSON.stringify(comingSoonVerse));
+            return;
+          }
+          throw new Error(`Error loading file: ${response.status}`);
+        }
+        const data = await response.json();
+        if (!data.verse || !data.reference) { throw new Error('Invalid verse data format'); }
+        displayVerse(data);
+        localStorage.setItem('currentVerse', JSON.stringify(data));
+        localStorage.setItem('verseDate', dateString);
+        console.log('✓ Loaded verse for ' + dateString);
+      } catch (error) {
+        console.warn('Error loading verse:', error.message);
+        const cached = localStorage.getItem('currentVerse');
+        if (cached) {
+          console.log('Using cached verse');
+          displayVerse(JSON.parse(cached));
+        } else {
+          console.log('Using technical difficulties fallback');
+          displayVerse(technicalDifficultiesVerse);
+          localStorage.setItem('currentVerse', JSON.stringify(technicalDifficultiesVerse));
+        }
+      }
+    }
+
+    function displayVerse(data) {
+      if (data.verse) { document.querySelector('.verse-text').innerText = '"' + data.verse + '"'; }
+      if (data.reference) { document.querySelector('.verse-reference').innerText = '- ' + data.reference; }
+      if (data.disclaimer) {
+        document.getElementById('bible-disclaimer').innerText = data.disclaimer;
+      } else {
+        document.getElementById('bible-disclaimer').innerText = '';
+      }
+    }
+
+    function scheduleNextMidnightUpdate() {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      const timeUntilMidnight = tomorrow - now;
+      console.log('Next verse update in ' + Math.round(timeUntilMidnight / 1000 / 60) + ' minutes');
+      setTimeout(() => { console.log('🌙 Midnight! Updating verse and audio...'); location.reload(); }, timeUntilMidnight);
+    }
+
+    loadTodaysVerse();
+    scheduleNextMidnightUpdate();
 
     if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(err => console.log(err)); }
   </script>
