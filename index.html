@@ -313,6 +313,7 @@ function setDailyAudioSource() {
   delete audioElement.dataset.triedFallback;
   audioElement.src = candidates[0];
   audioElement.dataset.fallbackSrc = candidates[1];
+  audioElement.load();
 }
 
 setDailyAudioSource();
