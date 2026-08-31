@@ -354,13 +354,19 @@ async function loadTodaysVerse() {
 
 // Function to display verse on the page
 function displayVerse(data) {
-  if (data.verse) {
-    document.querySelector('.verse-text').innerText = '"' + data.verse + '"';
-  }
-  if (data.reference) {
-    document.querySelector('.verse-reference').innerText = '— ' + data.reference;
-  }
+    if (data.verse) {
+        document.querySelector('.verse-text').innerText = '"' + data.verse + '"';
+    }
+    if (data.reference) {
+        document.querySelector('.verse-reference').innerText = '- ' + data.reference;
+    }
+    if (data.disclaimer) {
+        document.getElementById('bible-disclaimer').innerText = data.disclaimer;
+    } else {
+        document.getElementById('bible-disclaimer').innerText = '';
+    }
 }
+
 
 // Schedule midnight updates
 function scheduleNextMidnightUpdate() {
