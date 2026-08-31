@@ -389,10 +389,12 @@ function scheduleNextMidnightUpdate() {
 loadTodaysVerse();
 scheduleNextMidnightUpdate();
 </script>
-    <button class="audio-icon-btn" onclick="playAudio()"></button>
-    <button class="audio-icon-btn" onclick="pauseAudio()">||</button>
-    <button class="audio-icon-btn" onclick="stopAudio()"></button>
-  </div>
+        <div class="audio-controls-container">
+        <button class="audio-icon-btn" onclick="playAudio()">Play</button>
+        <button class="audio-icon-btn" onclick="pauseAudio()">Pause</button>
+        <button class="audio-icon-btn" onclick="stopAudio()">Stop</button>
+    </div>
+
 </div>
 
 <audio id="myAudio" src=""></audio>
