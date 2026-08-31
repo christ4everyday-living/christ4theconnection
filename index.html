@@ -282,16 +282,56 @@
         <audio id="myAudio"></audio>
 
 <script>
-  // Set the daily audio file based on the local date
+// Set the daily audio file based on the local date
 const localDate = new Date();
 const year = localDate.getFullYear();
 const month = String(localDate.getMonth() + 1).padStart(2, '0');
 const day = String(localDate.getDate()).padStart(2, '0');
 
-const todayString = year + '-' + month + '-' + day; 
+const todayString = year + '-' + month + '-' + day;
+const audioElement = document.getElementById('myAudio');
 
-// Dynamically apply the date to the audio player source
-document.getElementById('myAudio').src = 'audio-' + todayString + '.mp3';
+function updateAudioStatus(message) {
+  const statusElement = document.getElementById('audioStatusMessage');
+  if (statusElement) {
+    statusElement.innerText = message;
+  }
+}
+
+function setDailyAudioSource() {
+  if (!audioElement) {
+    console.warn('Audio player not found.');
+    return;
+  }
+
+  const candidates = [
+    'audio-' + todayString + '.mp3',
+    'audio-' + year + '-' + month + '.' + day + '.mp3'
+  ];
+
+  audioElement.src = candidates[0];
+  audioElement.dataset.fallbackSrc = candidates[1];
+}
+
+setDailyAudioSource();
+
+if (audioElement) {
+  audioElement.addEventListener('error', function () {
+    const fallbackSrc = audioElement.dataset.fallbackSrc;
+    if (fallbackSrc && !audioElement.dataset.triedFallback) {
+      audioElement.dataset.triedFallback = 'true';
+      audioElement.src = fallbackSrc;
+      audioElement.load();
+      return;
+    }
+
+    updateAudioStatus('Audio for today is not available yet.');
+  });
+
+  audioElement.addEventListener('canplay', function () {
+    updateAudioStatus('');
+  });
+}
 
 // Fallback messages
 const comingSoonVerse = {
@@ -354,16 +394,15 @@ async function loadTodaysVerse() {
 
 // Function to display verse on the page
 function displayVerse(data) {
-    if (data.verse) {
+    if (data && data.verse) {
         document.querySelector('.verse-text').innerText = '"' + data.verse + '"';
     }
-    if (data.reference) {
+    if (data && data.reference) {
         document.querySelector('.verse-reference').innerText = '- ' + data.reference;
     }
-    if (data.disclaimer) {
-        document.getElementById('bible-disclaimer').innerText = data.disclaimer;
-    } else {
-        document.getElementById('bible-disclaimer').innerText = '';
+    const disclaimerElement = document.getElementById('bible-disclaimer');
+    if (disclaimerElement) {
+        disclaimerElement.innerText = (data && data.disclaimer) ? data.disclaimer : '';
     }
 }
 
@@ -393,11 +432,10 @@ scheduleNextMidnightUpdate();
         <button class="audio-icon-btn" onclick="playAudio()">Play</button>
         <button class="audio-icon-btn" onclick="pauseAudio()">Pause</button>
         <button class="audio-icon-btn" onclick="stopAudio()">Stop</button>
+        <p id="audioStatusMessage" style="margin:8px 0 0 0; font-size:12px; color:#ccc;"></p>
     </div>
 
 </div>
-
-<audio id="myAudio" src=""></audio>
 
 <div class="btn-group">
   <button class="nav-btn" onclick="showPage('home')">Back Home</button>
@@ -434,9 +472,34 @@ scheduleNextMidnightUpdate();
     }
     
     var audio = document.getElementById("myAudio");
-    function playAudio() { audio.play(); }
-    function pauseAudio() { audio.pause(); }
-    function stopAudio() { audio.pause(); audio.currentTime = 0; }
+
+    function playAudio() {
+      if (!audio) {
+        return;
+      }
+      if (!audio.getAttribute("src")) {
+        updateAudioStatus("Audio source is missing.");
+        return;
+      }
+      audio.play().catch(function () {
+        updateAudioStatus("Audio could not be played right now.");
+      });
+    }
+
+    function pauseAudio() {
+      if (!audio) {
+        return;
+      }
+      audio.pause();
+    }
+
+    function stopAudio() {
+      if (!audio) {
+        return;
+      }
+      audio.pause();
+      audio.currentTime = 0;
+    }
 
     function updateTickerDate() {
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -450,4 +513,3 @@ scheduleNextMidnightUpdate();
   </script>
 </body>
 </html>
-
