@@ -476,10 +476,7 @@ scheduleNextMidnightUpdate();
 
     function playAudio() {
       if (!audio) {
-        return;
-      }
-      if (!audio.src) {
-        updateAudioStatus("Audio source is missing.");
+        updateAudioStatus("Audio player is unavailable.");
         return;
       }
       audio.play().catch(function () {
