@@ -306,10 +306,11 @@ function setDailyAudioSource() {
 
   const candidates = [
     'audio-' + todayString + '.mp3',
-    // Backward-compatible fallback for older/mistyped files like audio-YYYY-MM.DD.mp3
+    // Backward-compatible fallback for existing file names like audio-2026-08.31.mp3
     'audio-' + year + '-' + month + '.' + day + '.mp3'
   ];
 
+  delete audioElement.dataset.triedFallback;
   audioElement.src = candidates[0];
   audioElement.dataset.fallbackSrc = candidates[1];
 }
