@@ -321,6 +321,7 @@ if (audioElement) {
     const fallbackSrc = audioElement.dataset.fallbackSrc;
     if (fallbackSrc && !audioElement.dataset.triedFallback) {
       audioElement.dataset.triedFallback = 'true';
+      updateAudioStatus('Trying alternative audio source...');
       audioElement.src = fallbackSrc;
       audioElement.load();
       return;
@@ -472,7 +473,7 @@ scheduleNextMidnightUpdate();
       document.getElementById(pageId).classList.add('active'); 
     }
     
-    var audio = document.getElementById("myAudio");
+    var audio = audioElement;
 
     function playAudio() {
       if (!audio) {
