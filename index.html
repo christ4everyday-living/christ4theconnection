@@ -360,38 +360,39 @@
     const technicalDifficultiesVerse = { verse: "We're having technical difficulties", reference: "Please try again later" };
 
     async function loadTodaysVerse() {
-      const dateString = `${year}-${month}-${day}`;
-      const filePath = `json/word-${dateString}.json`;
-      try {
-        const response = await fetch(filePath);
-        if (!response.ok) {
-          if (response.status === 404) {
-            console.log('Verse file not yet created, using "Coming soon..." fallback');
-            displayVerse(comingSoonVerse);
-            localStorage.setItem('currentVerse', JSON.stringify(comingSoonVerse));
-            return;
-          }
-          throw new Error(`Error loading file: ${response.status}`);
-        }
-        const data = await response.json();
-        if (!data.verse || !data.reference) { throw new Error('Invalid verse data format'); }
-        displayVerse(data);
-        localStorage.setItem('currentVerse', JSON.stringify(data));
-        localStorage.setItem('verseDate', dateString);
-        console.log('✓ Loaded verse for ' + dateString);
-      } catch (error) {
-        console.warn('Error loading verse:', error.message);
-        const cached = localStorage.getItem('currentVerse');
-        if (cached) {
-          console.log('Using cached verse');
-          displayVerse(JSON.parse(cached));
-        } else {
-          console.log('Using technical difficulties fallback');
-          displayVerse(technicalDifficultiesVerse);
-          localStorage.setItem('currentVerse', JSON.stringify(technicalDifficultiesVerse));
-        }
+  const dateString = `${year}-${month}-${day}`;
+  const filePath = `json/word-${dateString}.json`;
+  try {
+    const response = await fetch(filePath, { cache: 'no-store' });
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log('Verse file not yet created, using "Coming soon..." fallback');
+        displayVerse(comingSoonVerse);
+        localStorage.setItem('currentVerse', JSON.stringify(comingSoonVerse));
+        return;
       }
+      throw new Error(`Error loading file: ${response.status}`);
     }
+    const data = await response.json();
+    if (!data.verse || !data.reference) { throw new Error('Invalid verse data format'); }
+    displayVerse(data);
+    localStorage.setItem('currentVerse', JSON.stringify(data));
+    localStorage.setItem('verseDate', dateString);
+    console.log('✓ Loaded verse for ' + dateString);
+  } catch (error) {
+    console.warn('Error loading verse:', error.message);
+    const cached = localStorage.getItem('currentVerse');
+    const cachedDate = localStorage.getItem('verseDate');
+    if (cached && cachedDate === dateString) {
+      console.log('Using cached verse for today');
+      displayVerse(JSON.parse(cached));
+    } else {
+      console.log('Using technical difficulties fallback');
+      displayVerse(technicalDifficultiesVerse);
+      localStorage.setItem('currentVerse', JSON.stringify(technicalDifficultiesVerse));
+    }
+  }
+}
 
     function displayVerse(data) {
       if (data.verse) { document.querySelector('.verse-text').innerText = '"' + data.verse + '"'; }
